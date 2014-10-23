@@ -1,0 +1,16 @@
+Target is to implemet Algorithm 2 from the paper.
+Functions to be implemented:
+--> Function for generation motion vectors(MV) for a given 2 frames and a block size and search size. To be done by SAD minimization. Use Lecture-11.pdf slide 9, use SAD instead of MAD.(Use the already given calculate_SAD function)
+--> Refine MV by Enegy minimization i.e select MV with the lowest Energy.  Refer to equation (19) of paper for Energy. 
+--> The above function will be called repeatedly with the block size reducing by a factor of 2, till it is 1x1.
+--> From the above function pass the MVs to next level. Repeat until we reach all the way to top.
+--> The refined MV's will be used by the higher level by implementing Hierarchial search as mentioned in Lecture-11.pdf, slide 16/17
+
+
+Also need to figure out how to use the code for processing the .flo file from the mulberry website. This will be the final part for generating results.
+
+
+Doubts:
+1. When we are finding MV's will we get multiple MV's for each block.
+2. When the block sizes is halved, how do we take candidate set, will the half block be taken by keeping the centre constant?
+ 
