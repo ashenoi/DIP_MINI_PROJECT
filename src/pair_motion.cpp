@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "pair_motion.h"
+#include "additional_functions.cpp"
 
 Pair_Motion::Pair_Motion(int * search_sizes, int * block_sizes, int * search_sizes_nonsquare_x, int * block_sizes_nonsquare_x, int * search_sizes_nonsquare_y, int * block_sizes_nonsquare_y)
 {  
@@ -149,7 +150,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   {
     //Means we already have a grayscale image
 	level1a_grey = cvCreateImage(cvGetSize(level1a), IPL_DEPTH_8U, 1);
-    cvCopyImage(level1a, level1a_grey); 
+    cvCopy(level1a, level1a_grey); 
   }
 
   //Convert color images to grayscale if necessary (Level1a)
@@ -163,7 +164,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   {
     //Means we already have a grayscale image
 	level1b_grey = cvCreateImage(cvGetSize(level1b), IPL_DEPTH_8U, 1);
-    cvCopyImage(level1b, level1b_grey); 
+    cvCopy(level1b, level1b_grey); 
   }  
          	
   //Level 2 Downsampling
@@ -367,7 +368,7 @@ void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplIma
   {
     //Means we already have a grayscale image
 	level1a_grey = cvCreateImage(cvGetSize(level1a), IPL_DEPTH_8U, 1);
-    cvCopyImage(level1a, level1a_grey); 
+    cvCopy(level1a, level1a_grey); 
     //level1a_grey = (IplImage*)level1a;
   }
 
@@ -385,7 +386,7 @@ void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplIma
   {
     //Means we already have a grayscale image
 	level1b_grey = cvCreateImage(cvGetSize(level1b), IPL_DEPTH_8U, 1);
-    cvCopyImage(level1b, level1b_grey); 
+    cvCopy(level1b, level1b_grey); 
     //level1b_grey = (IplImage*)level1b;
   }  
          	
@@ -518,7 +519,7 @@ double Pair_Motion::calculate_autocorr(IplImage *& image1, int b_size)
   if (image1->nChannels == 3)
     cvCvtColor(image1, image1_grey, CV_RGB2GRAY);		
   else
-	cvCopyImage(image1, image1_grey); 
+	cvCopy(image1, image1_grey); 
 
   int i, j, k, l, m, n;
   double num_correlation_windows = 0, corr = 0;

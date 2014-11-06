@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <iostream>
 #define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
+//#include <crtdbg.h>
 #include <vector>
-#include <tchar.h>
+//#include <tchar.h>
 #include <math.h>
 #include <cmath>
 ///#include <time.h>
@@ -21,9 +21,10 @@
 #include <opencv2/core/core.hpp>      
 #include <opencv2/core/operations.hpp>    
 #include <opencv2/highgui/highgui.hpp>  
-#include <opencv2/legacy/compat.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv/highgui.h>
+//#include <opencv2/legacy/compat.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
-
 #include <fstream>
 #include <time.h>
 #include <vector>

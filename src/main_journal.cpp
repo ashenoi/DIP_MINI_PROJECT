@@ -1,8 +1,11 @@
 
 #include "stdafx.h"
 #include "pair_motion.h"
+using namespace cv;
+using namespace std;
 
-int _tmain(int argc, _TCHAR* argv[])
+//int main(int argc)//, _TCHAR* argv[])
+int main(int argc, char** argv )
 {			
   //NOTE!!!! THESE SEARCH SIZES CANNOT BE THE SAME SIZE -- THEY NEED TO GO DOWN BY A FACTOR OF TWO AT EACH LEVEL!!!!!
 
@@ -30,8 +33,8 @@ int _tmain(int argc, _TCHAR* argv[])
   //-----------------------MIDDLEBURY SEQUENCES WITH KNOWN GROUND TRUTH------------------------------
   
     //Dimetrodoon
-    FILENAME_FRAME1 = "./middlebury/images/Dimetrodon/frame10.png";
-    FILENAME_FRAME2 = "./middlebury/images/Dimetrodon/frame11.png";  
+    FILENAME_FRAME1 = "./images/Dimetrodon/frame10.png";
+    FILENAME_FRAME2 = "./images/Dimetrodon/frame11.png";  
     image1 = cvLoadImage(FILENAME_FRAME1, CV_LOAD_IMAGE_UNCHANGED);
     image1_interp = cvCreateImage(cvSize(image1->width*(int)interp_factor, image1->height*(int)interp_factor), IPL_DEPTH_8U, 3);
     cvResize(image1, image1_interp, CV_INTER_CUBIC);
@@ -39,7 +42,7 @@ int _tmain(int argc, _TCHAR* argv[])
     image2_interp = cvCreateImage(cvSize(image2->width*(int)interp_factor, image2->height*(int)interp_factor), IPL_DEPTH_8U, 3);
     cvResize(image2, image2_interp, CV_INTER_CUBIC);  	
 	//cvNamedWindow("main", CV_WINDOW_AUTOSIZE); 
-    Pair1.start_calculation_nointerp(image2_interp, image1_interp, k);
+    Pair1.start_calculation_nointerp(image2_interp, image1_interp, 24);
     //MVs stored in Pair1.Computed_Data.v_x1, Pair1.Computed_Data.v_y1  
     Pair1.clean_up_nointerp();  
     cvReleaseImage(&image1);
