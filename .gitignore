@@ -1,3 +1,4 @@
 .*
 *.log
 test/images
+test/out,o
