@@ -14,9 +14,9 @@ class MV_array { //this is the class which just has the x and y component of the
   public:
 	MV_array();
 	int count;
-	int x[8];
-	int y[8];
-	int SAD[8];
+	int x[30];
+	int y[30];
+	int SAD[30];
 	int dup;
 };
 
