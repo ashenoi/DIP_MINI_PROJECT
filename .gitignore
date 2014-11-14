@@ -1,4 +1,4 @@
 .*
 *.log
 test/images
-test/out,o
+test/out.o
