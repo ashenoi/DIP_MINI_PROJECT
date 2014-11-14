@@ -4,7 +4,10 @@
 
 // DS 2/9/08 fixed bug in MotionToColor concerning reallocation of colim (thanks Yunpeng!)
 
-static const char *usage = "\n  usage: %s [-quiet] in.flo out.png [maxmotion]\n";
+
+//static const char *usage = "\n  usage: %s [-quiet] in.flo out.png [maxmotion]\n";
+// GURU DAS > My edits follow
+static const char *usage = "\n  usage: %s [-quiet] in.flo out.txt \n";
 
 #include <stdio.h>
 #include <math.h>
@@ -73,19 +76,21 @@ int main(int argc, char *argv[])
 	    verbose = 0;
 	    argn++;
 	}
-	if (argn >= argc-3 && argn <= argc-2) {
+	// GURU DAS > I commented this out: 	if (argn >= argc-3 && argn <= argc-2) {
+	if (argn >= argc-2 && argn <= argc-1) {
 	    char *flowname = argv[argn++];
 	    char *outname = argv[argn++];
-	    float maxmotion = argn < argc ? atof(argv[argn++]) : -1;
-	    CFloatImage im, fband;
-	    ReadFlowFile(im, flowname);
-	    CByteImage band, outim;
-	    CShape sh = im.Shape();
-	    sh.nBands = 3;
-	    outim.ReAllocate(sh);
-	    outim.ClearPixels();
-	    MotionToColor(im, outim, maxmotion);
-	    WriteImageVerb(outim, outname, verbose);
+	    // GURU DAS > I commented this out: 	float maxmotion = argn < argc ? atof(argv[argn++]) : -1;
+	    // GURU DAS > I commented this out: 	CFloatImage im, fband;
+	    // GURU DAS > I commented this out: 	ReadFlowFile(im, flowname);
+	    ToTextfile(flowname,outname);
+	    // GURU DAS > I commented this out: 	CByteImage band, outim;
+	    // GURU DAS > I commented this out: 	CShape sh = im.Shape();
+	    // GURU DAS > I commented this out: 	sh.nBands = 3;
+	    // GURU DAS > I commented this out: 	outim.ReAllocate(sh);
+	    // GURU DAS > I commented this out: 	outim.ClearPixels();
+	    // GURU DAS > I commented this out: 	MotionToColor(im, outim, maxmotion);
+	    // GURU DAS > I commented this out: 	WriteImageVerb(outim, outname, verbose);
 	} else
 	    throw CError(usage, argv[0]);
     }
