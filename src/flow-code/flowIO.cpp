@@ -30,6 +30,8 @@
 #include <math.h>
 #include "imageLib.h"
 #include "flowIO.h"
+// GURU DAS > I included fstream.h 
+#include <fstream>     
 
 // return whether flow vector is unknown
 bool unknown_flow(float u, float v) {
@@ -155,3 +157,70 @@ int main() {
     return 0;
 }
 */
+
+// GURU DAS > My edits follow
+void ToTextfile(const char* flowfile, const char* textfile)
+{
+    if (flowfile == NULL || textfile == NULL)
+    throw CError("ToTextFile: Input flow filename or Output text filename not specified");
+
+    const char *dot = strrchr(flowfile, '.');
+    if (strcmp(dot, ".flo") != 0)
+    throw CError("ToTextFile: (%s): Input flow filename extension .flo expected", flowfile);
+    
+    const char *dot2 = strrchr(textfile, '.');
+    if (strcmp(dot2, ".txt") != 0)
+    throw CError("ToTextFile: (%s): Output text filename extension .txt expected", textfile);
+
+    FILE *stream = fopen(flowfile, "rb");
+    if (stream == 0)
+        throw CError("ToTextFile:: could not open %s", flowfile);
+
+    //GURU DAS FILE *outstream = fopen(textfile, "w");
+    //GURU DAS if (stream == 0)
+    //GURU DAS     throw CError("ToTextFile:: could not open %s", textfile);    
+    std::ofstream outstream;
+    outstream.open(textfile);
+    
+    int width, height;
+    float tag;
+
+    if ((int)fread(&tag,    sizeof(float), 1, stream) != 1 ||
+    (int)fread(&width,  sizeof(int),   1, stream) != 1 ||
+    (int)fread(&height, sizeof(int),   1, stream) != 1)
+    throw CError("ToTextFile:: problem reading file %s", flowfile);
+
+    if (tag != TAG_FLOAT) // simple test for correct endian-ness
+    throw CError("ToTextFile:(%s): wrong tag (possibly due to big-endian machine?)", flowfile);
+
+    // another sanity check to see that integers were read correctly (99999 should do the trick...)
+    if (width < 1 || width > 99999)
+    throw CError("ToTextFile:(%s): illegal width %d", flowfile, width);
+
+    if (height < 1 || height > 99999)
+    throw CError("ReadFlowFile(%s): illegal height %d", flowfile, height);
+
+    printf("reading %d x %d x 2 = %d floats\n", width, height, width*height*2);
+    /*
+    int n = nBands * width;
+    for (int y = 0; y < height; y++) {
+    float* ptr = &img.Pixel(0, y, 0);
+    if ((int)fread(ptr, sizeof(float), n, stream) != n)
+        throw CError("ToTextFile:(%s): file is too short", filename);
+    }
+    */
+
+    float u,v;
+
+    while((int)fread(&u, sizeof(float), 1, stream)==1 && (int)fread(&v, sizeof(float), 1, stream)==1)
+    {
+        outstream<<u<<","<<v<<"\n";
+        //  u=0; v=0;
+    }
+    
+
+
+    fclose(stream);
+    //fclose(outstream);
+    outstream.close();
+}
