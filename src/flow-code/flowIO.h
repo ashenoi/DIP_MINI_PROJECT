@@ -17,4 +17,7 @@ void ReadFlowFile(CFloatImage& img, const char* filename);
 // write a 2-band image into flow file 
 void WriteFlowFile(CFloatImage img, const char* filename);
 
+// GURU DAS > read from a flow file into text file
+void ToTextfile(const char* flowfile, const char* textfile);
+
 
