@@ -12,3 +12,10 @@ sim:
 	cp -f motion_vectors.txt mv_${IMAGE}.txt
 
 run: compile sim
+
+compile_GT: 
+	cd $(SRC)/flow-code/imageLib && make
+	cd $(SRC)/flow-code && make
+
+extractflow:
+	./$(SRC)/flow-code/color_flow ./Ground_Truth_Files/${IMAGE}/flow10.flo mv_GT_${IMAGE}.txt	
