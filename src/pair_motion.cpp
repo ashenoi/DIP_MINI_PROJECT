@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "pair_motion.h"
 #include "additional_functions.cpp"
-
 Pair_Motion::Pair_Motion(int * search_sizes, int * block_sizes, int * search_sizes_nonsquare_x, int * block_sizes_nonsquare_x, int * search_sizes_nonsquare_y, int * block_sizes_nonsquare_y)
 {  
   //These are the search sizes and block sizes for the entire hierarchy of images
@@ -272,8 +271,13 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   predict_step = frame_predict->widthStep; 
   
   // This is where we allocate our dynamic arrays used to calculate motion positions and motion vectors
+  std::cout<<"ASHWIN VX "<<height1*step1<<"\n";
+  std::cout<<"ASHWIN VX "<<height2*step2<<"\n";
+  std::cout<<"ASHWIN VX "<<height3*step3<<"\n";
+  std::cout<<"ASHWIN VX "<<height4*step4<<"\n";
   Computed_Data.v_x1 = new int[height1*step1];
   Computed_Data.v_y1 = new int[height1*step1];	
+  Computed_Data.overlap= new int[height1*step1];	
   //v_x1sub = new double[height1*step1];
   //v_y1sub = new double[height1*step1];
   //mult_vec1 = new MV_array[height1*step1];
@@ -301,6 +305,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
       Computed_Data.v_x1[i*step1+j] = 0;
 	  Computed_Data.v_y1[i*step1+j] = 0;
 	  Computed_Data.reliability[i*step1+j] = 0;	
+	  Computed_Data.overlap[i*step1+j] = 0;	
 	  overlap1[i*step1+j] = 0;		 
 	  //v_x1sub[i*step1+j] = 0.0;
 	  //v_y1sub[i*step1+j] = 0.0;
@@ -342,6 +347,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   }
 
   calculate_motion_vectors_overlap(lambda_value);
+//  calculate_motion_vectors_lagrange(lambda_value);
 
 }
 void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplImage*& image2, int lambda_value)
@@ -557,6 +563,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   fout.open("motion_vectors.txt");
   //total_count = 0;
 
+//  std::cout<<"ASHWIN1\n";
   //--------------------Level 3----------------------------
   //Initializations for Level 3
   level = 3;
@@ -578,6 +585,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   //v_y_old = v_y3_old;
   //End of initializations
   onelevlspiral_BM();
+//  std::cout<<"ASHWIN2\n";
   //onelevl_BM();
   for(int k = 0; k < 2; k++)
   {
@@ -594,6 +602,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   } 
   b_size = (level2_block_size >> 1); // set to half of block size needed at next level
   
+//  std::cout<<"ASHWIN3\n";
   //-----------------End of Level 3------------------------
 
   //---------------------Level 2---------------------------
@@ -3550,6 +3559,7 @@ void Pair_Motion::nextlevlspiral_BM_sorted_v2()
 }
 void Pair_Motion::setMVs_iter()
 {
+//  std::cout<<"ASHWINSETMVENTRE3\n";
   int b_size_div = (b_size >> 1);
   //int median_x, median_y; //average of surrounding MVs
   
@@ -3646,6 +3656,8 @@ void Pair_Motion::setMVs_iter()
 	v_y[i*step_size+(j+block_size_div)] = v_y[i*step_size+j]; //take care of bottom left 1/4 block
 	v_y[(i+block_size_div)*step_size+(j+block_size_div)] = v_y[i*step_size+j]; //take care of bottom right block
   } */
+//  std::cout<<"ASHWINSETMV3\n";
+//  std::cout<<"ASHWIN "<<sizeof(v_x)<<"  "<<sizeof(v_y)<<"\n";
 }
 void Pair_Motion::setMVs_iter_nonsquare()
 {
@@ -4864,6 +4876,7 @@ void Pair_Motion::add_smoothness8_old(double lambda_value)
 }
 void Pair_Motion::add_smoothness8(double lambda_value) 
 {
+//  std::cout<<"ASHWINADDSMOOTHV3\n";
   int min_index, i, j, k, l, n, p;
   double lambda;
   double candidate[9];  
@@ -4977,7 +4990,7 @@ void Pair_Motion::add_smoothness8(double lambda_value)
 		    Computed_Data.overlap[k*step+l] += 1; */
 
 	    //Next, calculate the total overlap.  
-	    total_overlap = get_overlap_volume(temp_x + j, temp_y + i);/* + calculate_SAD(i, j, temp_x + j, temp_y + i);/*
+	    total_overlap = get_overlap_volume(temp_x + j, temp_y + i);/* + calculate_SAD(i, j, temp_x + j, temp_y + i);*//*
 					    get_overlap_volume(v_x[(i-b_size)*step+j] + j, v_y[(i-b_size)*step+j] + (i-b_size)) +
 					      get_overlap_volume(v_x[i*step+(j-b_size)] + (j-b_size), v_y[i*step+(j-b_size)] + i) +
 					      get_overlap_volume(v_x[(i+b_size)*step+j] + j, v_y[(i+b_size)*step+j] + (i+b_size)) +
@@ -5049,9 +5062,14 @@ void Pair_Motion::add_smoothness8(double lambda_value)
 		{
 		  //Subtract out the overlap for the one already assigned prior to smoothness function.
 	      for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
+	      {
 	        for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
+		{
+//		      std::cout<<"ASHWIN"<<sizeof(Computed_Data.overlap)<<"  "<<k<<" "<<step<<" "<<l<<"\n";
 		      Computed_Data.overlap[k*step+l] -= 1;
-
+//  	              std::cout<<"ASHWINADDSMOOTHV3CHECK\n";
+		}
+	      }
 	      //Next, add the overlap caused by the minimum found from min_array() above.
 	      for(k = temp_y + i; k < temp_y + i + b_size; k++)
 	        for(l = temp_x + j; l < temp_x + j + b_size; l++)
@@ -6350,609 +6368,10 @@ void Pair_Motion::add_smoothness8(double lambda_value)
 
 	}
   }	
+  
+//  std::cout<<"ASHWINADDSMOOTHVEXIT3\n";
 }
-void Pair_Motion::add_smoothness8_overlap(double lambda_value) 
-{
-  int min_index, i, j, k, l, n;
-  double lambda;
-  double candidate[9];  
-  
-  //The variables below are for removing duplicate MVs
-  int duplicate_list[9] = {0};
-  int hash[9] = {0};
-  int MV_x[9];
-  int MV_y[9];
-    
-  int bs_squared = b_size;
-    
-  lambda = lambda_value;
-	  
-  for (i = start_pos + b_size; i < height-(add_height - start_pos + b_size); i+=b_size) //goes through all vertical pixels
-  {
-	for (j = start_pos + b_size; j < width-(add_width - start_pos + b_size); j+=b_size) //goes through all horizontal pixels
-    {	   
 
-	  //Initalize duplicate list to zero -- no duplicates
-	  for(k = 0; k < 9; k++)
-	  {
-       duplicate_list[k] = 0;  
-	   hash[k] = 0;
-	  }
-
-	  MV_x[0] = v_x[i*step+j];
-	  MV_y[0] = v_y[i*step+j];
-	  MV_x[1] = v_x[(i-b_size)*step+j];
-	  MV_y[1] = v_y[(i-b_size)*step+j];
-	  MV_x[2] = v_x[i*step+(j-b_size)];
-	  MV_y[2] = v_y[i*step+(j-b_size)];
-	  MV_x[3] = v_x[(i+b_size)*step+j];
-	  MV_y[3] = v_y[(i+b_size)*step+j];
-	  MV_x[4] = v_x[i*step+(j+b_size)];
-	  MV_y[4] = v_y[i*step+(j+b_size)];
-	  MV_x[5] = v_x[(i-b_size)*step+(j-b_size)];
-	  MV_y[5] = v_y[(i-b_size)*step+(j-b_size)];
-	  MV_x[6] = v_x[(i+b_size)*step+(j-b_size)];
-	  MV_y[6] = v_y[(i+b_size)*step+(j-b_size)];
-	  MV_x[7] = v_x[(i-b_size)*step+(j+b_size)];
-	  MV_y[7] = v_y[(i-b_size)*step+(j+b_size)];	  
-	  MV_x[8] = v_x[(i+b_size)*step+(j+b_size)];
-	  MV_y[8] = v_y[(i+b_size)*step+(j+b_size)];
-
-	  //Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-      for(k = 1; k < 9; k++)
-      {
-        for(l = 0; l < 9; l++)
-	    {
-	      if ((l == k) || (duplicate_list[k] == 1))
-	        continue;
-          else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	      {
-	        duplicate_list[l] = 1;
-	      } 	    
-	    }
-      }	  
-	 
-	  //Subtract out the overlap for the one already assigned prior to smoothness function.
-	  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	    for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-		  Computed_Data.overlap[k*step+l] -= 1;
-
-	  n = 0;
-	  for(k = 0; k < 9; k++)
-	  {
-		if (duplicate_list[k] == 0)
-		{
-		  hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	      candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn(MV_y[k], MV_x[k], i, j);
-		}
-	  }
-
-	  min_array(candidate, n, min_index); 	
-	  v_x[i*step+j] = MV_x[hash[min_index]];
-	  v_y[i*step+j] = MV_y[hash[min_index]];
-
-	  //Next, add the overlap for the minimum found from min_array() above.
-	  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	    for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-		  Computed_Data.overlap[k*step+l] += 1;    	
-	}	
-  }  
-  
-  //Top row
-  i = start_pos;
-  for (j = start_pos + b_size; j < width-(add_width - start_pos + b_size); j+=b_size)
-  {    
-
-    //Initalize duplicate list to zero -- no duplicates
-	for(k = 0; k < 6; k++)
-	{
-      duplicate_list[k] = 0;  
-	  hash[k] = 0;
-	}
-
-	MV_x[0] = v_x[i*step+j];
-    MV_y[0] = v_y[i*step+j];
-	MV_x[1] = v_x[i*step+(j-b_size)];
-	MV_y[1] = v_y[i*step+(j-b_size)];
-	MV_x[2] = v_x[(i+b_size)*step+j];
-	MV_y[2] = v_y[(i+b_size)*step+j];
-	MV_x[3] = v_x[i*step+(j+b_size)];
-	MV_y[3] = v_y[i*step+(j+b_size)];
-	MV_x[4] = v_x[(i+b_size)*step+(j-b_size)];
-	MV_y[4] = v_y[(i+b_size)*step+(j-b_size)];		
-	MV_x[5] = v_x[(i+b_size)*step+(j+b_size)];
-	MV_y[5] = v_y[(i+b_size)*step+(j+b_size)];	  
-
-	//Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-    for(k = 1; k < 6; k++)
-    {
-      for(l = 0; l < 6; l++)
-	  {
-	    if ((l == k) || (duplicate_list[k] == 1))
-	      continue;
-        else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	    {
-	      duplicate_list[l] = 1;
-	    } 	    
-	  }
-    }	  
-	
-	//Subtract out the overlap for the one already assigned prior to smoothness function.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] -= 1;
-
-	n = 0;
-	for(k = 0; k < 6; k++)
-	{
-	  if (duplicate_list[k] == 0)
-	  {
-		hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	    candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_top_overlap(MV_y[k], MV_x[k], i, j);
-	  }
-	}
-	
-	min_array(candidate, n, min_index); 
-	v_x[i*step+j] = MV_x[hash[min_index]];
-	v_y[i*step+j] = MV_y[hash[min_index]];
-
-	//Next, add the overlap for the minimum found from min_array() above.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] += 1; 				  	
-  }
-
-  //Left column
-  j = start_pos;
-  for (i = start_pos + b_size; i < height-(add_height - start_pos + b_size); i+=b_size)
-  {        
-    //Initalize duplicate list to zero -- no duplicates
-	for(k = 0; k < 6; k++)
-	{
-      duplicate_list[k] = 0;  
-	  hash[k] = 0;
-	}
-
-	MV_x[0] = v_x[i*step+j];
-	MV_y[0] = v_y[i*step+j];
-	MV_x[1] = v_x[(i-b_size)*step+j];
-	MV_y[1] = v_y[(i-b_size)*step+j];
-	MV_x[2] = v_x[(i+b_size)*step+j];
-	MV_y[2] = v_y[(i+b_size)*step+j];
-	MV_x[3] = v_x[i*step+(j+b_size)];
-	MV_y[3] = v_y[i*step+(j+b_size)];	 
-	MV_x[4] = v_x[(i-b_size)*step+(j+b_size)];
-	MV_y[4] = v_y[(i-b_size)*step+(j+b_size)];	
-	MV_x[5] = v_x[(i+b_size)*step+(j+b_size)];
-	MV_y[5] = v_y[(i+b_size)*step+(j+b_size)];	 
-	
-	//Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-    for(k = 1; k < 6; k++)
-    {
-      for(l = 0; l < 6; l++)
-	  {
-	    if ((l == k) || (duplicate_list[k] == 1))
-	      continue;
-        else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	    {
-	      duplicate_list[l] = 1;
-	    } 	    
-	  }
-    }	  
-
-	//Subtract out the overlap for the one already assigned prior to smoothness function.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] -= 1;
-	 
-	n = 0;
-	for(k = 0; k < 6; k++)
-	{
-	  if (duplicate_list[k] == 0)
-	  {
-		hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	    candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_left_overlap(MV_y[k], MV_x[k], i, j);
-	  }
-	}
-	
-	min_array(candidate, n, min_index); 
-	v_x[i*step+j] = MV_x[hash[min_index]];
-	v_y[i*step+j] = MV_y[hash[min_index]];
-
-	//Next, add the overlap for the minimum found from min_array() above.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] += 1;     
-  }
-
-  //Right column
-  if (((width - add_width) % b_size) == 0)
-    j = width - (add_width - start_pos + b_size); 
-  else
-	j = width - (add_width - start_pos + ((width - add_width) % b_size));
-
-  for (i = start_pos + b_size; i < height-(add_height - start_pos + b_size); i+=b_size)
-  {       
-    //Initalize duplicate list to zero -- no duplicates
-	for(k = 0; k < 6; k++)
-	{
-      duplicate_list[k] = 0;  
-	  hash[k] = 0;
-	}
-
-	MV_x[0] = v_x[i*step+j];
-	MV_y[0] = v_y[i*step+j];
-	MV_x[1] = v_x[(i-b_size)*step+j];
-	MV_y[1] = v_y[(i-b_size)*step+j];
-	MV_x[2] = v_x[i*step+(j-b_size)];
-	MV_y[2] = v_y[i*step+(j-b_size)];
-	MV_x[3] = v_x[(i+b_size)*step+j];
-	MV_y[3] = v_y[(i+b_size)*step+j];
-	MV_x[4] = v_x[(i-b_size)*step+(j-b_size)];
-	MV_y[4] = v_y[(i-b_size)*step+(j-b_size)];		 
-	MV_x[5] = v_x[(i+b_size)*step+(j-b_size)];
-	MV_y[5] = v_y[(i+b_size)*step+(j-b_size)];	
-
-	//Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-    for(k = 1; k < 6; k++)
-    {
-      for(l = 0; l < 6; l++)
-	  {
-	    if ((l == k) || (duplicate_list[k] == 1))
-	      continue;
-        else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	    {
-	      duplicate_list[l] = 1;
-	    } 	    
-	  }
-    }	  
-	 
-	//Subtract out the overlap for the one already assigned prior to smoothness function.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] -= 1;
-
-	n = 0;
-	for(k = 0; k < 6; k++)
-	{
-	  if (duplicate_list[k] == 0)
-	  {
-		hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	    candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_right_overlap(MV_y[k], MV_x[k], i, j);
-	  }
-	}
-	
-	min_array(candidate, n, min_index); 
-	v_x[i*step+j] = MV_x[hash[min_index]];
-	v_y[i*step+j] = MV_y[hash[min_index]];
-
-	//Next, add the overlap for the minimum found from min_array() above.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] += 1;      
-  }
-
-  //Bottom row   
-  if (((height - add_height) % b_size) == 0) 
-    i = height - (add_height - start_pos + b_size);
-  else
-	i = height - (add_height - start_pos + ((height - add_height) % b_size));
-
-  for (j = start_pos + b_size; j < width-(add_width - start_pos + b_size); j+=b_size)
-  { 
-    //Initalize duplicate list to zero -- no duplicates
-	for(k = 0; k < 6; k++)
-	{
-      duplicate_list[k] = 0;  
-	  hash[k] = 0;
-	}
-
-	MV_x[0] = v_x[i*step+j];
-	MV_y[0] = v_y[i*step+j];
-	MV_x[1] = v_x[(i-b_size)*step+j];
-	MV_y[1] = v_y[(i-b_size)*step+j];
-	MV_x[2] = v_x[i*step+(j-b_size)];
-	MV_y[2] = v_y[i*step+(j-b_size)];
-	MV_x[3] = v_x[i*step+(j+b_size)];
-	MV_y[3] = v_y[i*step+(j+b_size)];
-	MV_x[4] = v_x[(i-b_size)*step+(j-b_size)];
-	MV_y[4] = v_y[(i-b_size)*step+(j-b_size)];	
-	MV_x[5] = v_x[(i-b_size)*step+(j+b_size)];
-	MV_y[5] = v_y[(i-b_size)*step+(j+b_size)];	
-
-	//Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-    for(k = 1; k < 6; k++)
-    {
-      for(l = 0; l < 6; l++)
-	  {
-	    if ((l == k) || (duplicate_list[k] == 1))
-	      continue;
-        else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	    {
-	      duplicate_list[l] = 1;
-	    } 	    
-	  }
-    }	  
-	
-	//Subtract out the overlap for the one already assigned prior to smoothness.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] -= 1;
-
-	n = 0;
-	for(k = 0; k < 6; k++)
-	{
-	  if (duplicate_list[k] == 0)
-	  {
-		hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	    candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_bottom_overlap(MV_y[k], MV_x[k], i, j);
-	  }
-	}
-	  	 	  
-	min_array(candidate, n, min_index); 
-	v_x[i*step+j] = MV_x[hash[min_index]];
-	v_y[i*step+j] = MV_y[hash[min_index]];   
-
-	//Next, add the overlap for the minimum found from min_array() above.
-	for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	  for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	    Computed_Data.overlap[k*step+l] += 1;
-	
-  }  
-
-  //CORNERS!
-
-  //Left corner
-  i = start_pos;
-  j = start_pos;
-
-  //Initalize duplicate list to zero -- no duplicates
-  for(k = 0; k < 4; k++)
-  {
-    duplicate_list[k] = 0;  
-	hash[k] = 0;
-  }
-
-  MV_x[0] = v_x[i*step+j];
-  MV_y[0] = v_y[i*step+j];
-  MV_x[1] = v_x[(i+b_size)*step+j];
-  MV_y[1] = v_y[(i+b_size)*step+j];	
-  MV_x[2] = v_x[i*step+(j+b_size)];
-  MV_y[2] = v_y[i*step+(j+b_size)];	     
-  MV_x[3] = v_x[(i+b_size)*step+(j+b_size)];
-  MV_y[3] = v_y[(i+b_size)*step+(j+b_size)];	 
-
-  //Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-  for(k = 1; k < 4; k++)
-  {
-    for(l = 0; l < 4; l++)
-	{
-	  if ((l == k) || (duplicate_list[k] == 1))
-	    continue;
-      else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	  {
-	    duplicate_list[l] = 1;
-	  } 	    
-	}
-  }	  
-	 
-  //Subtract out the overlap for the one already assigned prior to smoothness.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] -= 1;
-
-  n = 0;
-  for(k = 0; k < 4; k++)
-  {
-	if (duplicate_list[k] == 0)
-	{
-	  hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	  candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_leftcorn_overlap(MV_y[k], MV_x[k], i, j);
-	}
-  }
-	  	 	  
-  min_array(candidate, n, min_index); 
-  v_x[i*step+j] = MV_x[hash[min_index]];
-  v_y[i*step+j] = MV_y[hash[min_index]];   
-
-  //Next, add the overlap for the minimum found from min_array() above.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] += 1; 
-  
-  
-  //Right corner
-  i = start_pos;
-
-  if (((width - add_width) % b_size) == 0)
-    j = width - (add_width - start_pos + b_size); 
-  else
-	j = width - (add_width - start_pos + ((width - add_width) % b_size));
-  
-  //Initalize duplicate list to zero -- no duplicates
-  for(k = 0; k < 4; k++)
-  {
-    duplicate_list[k] = 0;  
-	hash[k] = 0;
-  }
-
-  MV_x[0] = v_x[i*step+j];
-  MV_y[0] = v_y[i*step+j]; 
-  MV_x[1] = v_x[(i+b_size)*step+j];
-  MV_y[1] = v_y[(i+b_size)*step+j]; 
-  MV_x[2] = v_x[i*step+(j-b_size)];
-  MV_y[2] = v_y[i*step+(j-b_size)];    
-  MV_x[3] = v_x[(i+b_size)*step+(j-b_size)];
-  MV_y[3] = v_y[(i+b_size)*step+(j-b_size)]; 
-
-  //Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-  for(k = 1; k < 4; k++)
-  {
-    for(l = 0; l < 4; l++)
-	{
-	  if ((l == k) || (duplicate_list[k] == 1))
-	    continue;
-      else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	  {
-	    duplicate_list[l] = 1;
-	  } 	    
-	}
-  }	  
-	 
-  //Subtract out the overlap for the one already assigned prior to smoothness.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] -= 1;
-
-  n = 0;
-  for(k = 0; k < 4; k++)
-  {
-	if (duplicate_list[k] == 0)
-	{
-	  hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	  candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_rightcorn_overlap(MV_y[k], MV_x[k], i, j);
-	}
-  }
-	  	 	  
-  min_array(candidate, n, min_index); 
-  v_x[i*step+j] = MV_x[hash[min_index]];
-  v_y[i*step+j] = MV_y[hash[min_index]];   
-
-  //Next, add the overlap for the minimum found from min_array() above.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] += 1;
-
-
-  //Bottom left corner
-  if (((height - add_height) % b_size) == 0) 
-    i = height - (add_height - start_pos + b_size);
-  else
-	i = height - (add_height - start_pos + ((height - add_height) % b_size));
-
-  j = start_pos;
-
-  //Initalize duplicate list to zero -- no duplicates
-  for(k = 0; k < 4; k++)
-  {
-    duplicate_list[k] = 0;  
-	hash[k] = 0;
-  }
-
-  MV_x[0] = v_x[i*step+j];
-  MV_y[0] = v_y[i*step+j];
-  MV_x[1] = v_x[(i-b_size)*step+j];
-  MV_y[1] = v_y[(i-b_size)*step+j]; 
-  MV_x[2] = v_x[i*step+(j+b_size)];
-  MV_y[2] = v_y[i*step+(j+b_size)];    
-  MV_x[3] = v_x[(i-b_size)*step+(j+b_size)];
-  MV_y[3] = v_y[(i-b_size)*step+(j+b_size)];  
-
-  //Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-  for(k = 1; k < 4; k++)
-  {
-    for(l = 0; l < 4; l++)
-	{
-	  if ((l == k) || (duplicate_list[k] == 1))
-	    continue;
-      else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	  {
-	    duplicate_list[l] = 1;
-	  } 	    
-	}
-  }	  
-
-  //Subtract out the overlap for the one already assigned prior to smoothness.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] -= 1;
-
-  n = 0;
-  for(k = 0; k < 4; k++)
-  {
-	if (duplicate_list[k] == 0)
-	{
-	  hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	  candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_bottomleftcorn_overlap(MV_y[k], MV_x[k], i, j);
-	}
-  }
-	  	 	  
-  min_array(candidate, n, min_index); 
-  v_x[i*step+j] = MV_x[hash[min_index]];
-  v_y[i*step+j] = MV_y[hash[min_index]];   
-
-  //Next, add the overlap for the minimum found from min_array() above.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] += 1;
-   
-
-  //Bottom right corner
-  if (((height - add_height) % b_size) == 0) 
-    i = height - (add_height - start_pos + b_size);
-  else
-	i = height - (add_height - start_pos + ((height - add_height) % b_size));
-
-  if (((width - add_width) % b_size) == 0)
-    j = width - (add_width - start_pos + b_size); 
-  else
-	j = width - (add_width - start_pos + ((width - add_width) % b_size));
-
-  //Initalize duplicate list to zero -- no duplicates
-  for(k = 0; k < 4; k++)
-  {
-    duplicate_list[k] = 0;  
-	hash[k] = 0;
-  }
-
-  MV_x[0] = v_x[i*step+j];
-  MV_y[0] = v_y[i*step+j];  
-  MV_x[1] = v_x[(i-b_size)*step+j];
-  MV_y[1] = v_y[(i-b_size)*step+j];
-  MV_x[2] = v_x[i*step+(j-b_size)];
-  MV_y[2] = v_y[i*step+(j-b_size)]; 
-  MV_x[3] = v_x[(i-b_size)*step+(j-b_size)];
-  MV_y[3] = v_y[(i-b_size)*step+(j-b_size)];
-
-  //Check for duplicates, a duplicate is assigned a value of '1' in the duplicate list
-  for(k = 1; k < 4; k++)
-  {
-    for(l = 0; l < 4; l++)
-	{
-	  if ((l == k) || (duplicate_list[k] == 1))
-	    continue;
-      else if ((MV_x[k] == MV_x[l]) && (MV_y[k] == MV_y[l]))
-	  {
-	    duplicate_list[l] = 1;
-	  } 	    
-	}
-  }	  
-	 
-  //Subtract out the overlap for the one already assigned prior to smoothness.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] -= 1;
-
-  n = 0;
-  for(k = 0; k < 4; k++)
-  {
-	if (duplicate_list[k] == 0)
-	{
-	  hash[n] = k; // this tell us which position of MV_x and MV_y the candidate is stored at.
-	  candidate[n++] = (1 + calculate_SAD(i, j, MV_x[k] + j, MV_y[k] + i))*(1 + ((double)get_overlap_volume(MV_x[k] + j, MV_y[k] + i)/bs_squared)) + lambda*cost_fn_bottomrightcorn_overlap(MV_y[k], MV_x[k], i, j);
-	}
-  }
-	  	 	  
-  min_array(candidate, n, min_index); 
-  v_x[i*step+j] = MV_x[hash[min_index]];
-  v_y[i*step+j] = MV_y[hash[min_index]];   
-
-  //Next, add the overlap for the minimum found from min_array() above.
-  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
-	for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
-	  Computed_Data.overlap[k*step+l] += 1;
-
-}
 void Pair_Motion::add_smoothness8_weighted(double lambda_value) 
 {
   int min_index, i, j, x_pos, y_pos, b_size_sq;

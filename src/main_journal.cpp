@@ -1,6 +1,8 @@
 
 #include "stdafx.h"
 #include "pair_motion.h"
+#include <iostream>
+
 using namespace cv;
 using namespace std;
 
