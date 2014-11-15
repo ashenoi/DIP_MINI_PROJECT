@@ -33,10 +33,16 @@ int main(int argc, char** argv )
     
  
   //-----------------------MIDDLEBURY SEQUENCES WITH KNOWN GROUND TRUTH------------------------------
+
+    if (argc != 3) 
+    {
+	    std::cout<<"Pass the two images\n";
+	    return 1;
+    }
   
     //Dimetrodoon
-    FILENAME_FRAME1 = "./images/Dimetrodon/frame10.png";
-    FILENAME_FRAME2 = "./images/Dimetrodon/frame11.png";  
+    FILENAME_FRAME1 = argv[1];
+    FILENAME_FRAME2 = argv[2];  
     image1 = cvLoadImage(FILENAME_FRAME1, CV_LOAD_IMAGE_UNCHANGED);
     image1_interp = cvCreateImage(cvSize(image1->width*(int)interp_factor, image1->height*(int)interp_factor), IPL_DEPTH_8U, 3);
     cvResize(image1, image1_interp, CV_INTER_CUBIC);
