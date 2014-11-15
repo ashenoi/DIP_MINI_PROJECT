@@ -10,7 +10,7 @@ while($line1=<FILE1>)
 	chomp($line2);
 	@mv1 = split(',',$line1);
 	@mv2 = split(',',$line2);
-	$EE=(($mv1[0]-$mv2[0])**2+($mv1[1]-$mv2[1])**2)**0.5;
+	$EE+=(($mv1[0]-$mv2[0])**2+($mv1[1]-$mv2[1])**2)**0.5;
 	$count+=1;
 }
 print $EE,"\n";
