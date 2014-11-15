@@ -22,7 +22,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   fout.open("motion_vectors.txt");
   //total_count = 0;
 
-//  std::cout<<"ASHWIN1\n";
+////  std::cout<<"ASHWIN1\n";
  
   //--------------------Level 4----------------------------
   //Initializations for Level 4
@@ -47,7 +47,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   Computed_Data.overlap = overlap4;
   onelevlspiral_BM();
   calculate_block_overlap();
-//  std::cout<<"ASHWIN2\n";
+////  std::cout<<"ASHWIN2\n";
   //onelevl_BM();
   for(int k = 0; k < 2; k++)
   {
@@ -64,7 +64,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   } 
   b_size = (level3_block_size >> 1); // set to half of block size needed at next level
   
-//  std::cout<<"ASHWIN4\n";
+////  std::cout<<"ASHWIN4\n";
   //-----------------End of Level 4------------------------
 
 
@@ -322,7 +322,7 @@ double Pair_Motion::find_overlap_max()
 
 int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
 {
- //std::cout<<"ASHWIN overlap "<<Computed_Data.overlap[y_pos*step+x_pos]<<"\n";
+// //std::cout<<"ASHWIN overlap "<<Computed_Data.overlap[y_pos*step+x_pos]<<"\n";
  return Computed_Data.overlap[y_pos*step+x_pos]; 
 }
 
@@ -644,7 +644,7 @@ void Pair_Motion::add_smoothness8_overlap(double lambda_value)
   int MV_y[9];
     
   int bs_squared = b_size;
-  std::cout<<"ASHWIN 1\n"; 
+//  std::cout<<"ASHWIN 1\n"; 
   lambda = lambda_value;
 	  
   for (i = start_pos + b_size; i < height-(add_height - start_pos + b_size); i+=b_size) //goes through all vertical pixels
@@ -696,10 +696,10 @@ void Pair_Motion::add_smoothness8_overlap(double lambda_value)
 	  for(k = v_y[i*step+j] + i; k < v_y[i*step+j] + i + b_size; k++)
 	    for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
 	    {
-  	  	  //std::cout<<"ASHWIN 3\n"; 
-  	  	  //std::cout<<"ASHWIN"<<k<<"\n"; 
-  	  	  //std::cout<<"ASHWIN"<<step<<"\n"; 
-  	  	  //std::cout<<"ASHWIN"<<l<<"\n"; 
+//  	  	  //std::cout<<"ASHWIN 3\n"; 
+//  	  	  //std::cout<<"ASHWIN"<<k<<"\n"; 
+//  	  	  //std::cout<<"ASHWIN"<<step<<"\n"; 
+//  	  	  //std::cout<<"ASHWIN"<<l<<"\n"; 
 		  Computed_Data.overlap[k*step+l] -= 1;
 	    }
 
@@ -722,7 +722,7 @@ void Pair_Motion::add_smoothness8_overlap(double lambda_value)
 	    for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
 		  Computed_Data.overlap[k*step+l] += 1;    	
 	}	
-  	std::cout<<"ASHWIN 2\n"; 
+//  	std::cout<<"ASHWIN 2\n"; 
   }  
   
   //Top row
