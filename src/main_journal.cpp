@@ -49,6 +49,8 @@ int main(int argc, char** argv )
     image2 = cvLoadImage(FILENAME_FRAME2, CV_LOAD_IMAGE_UNCHANGED);
     image2_interp = cvCreateImage(cvSize(image2->width*(int)interp_factor, image2->height*(int)interp_factor), IPL_DEPTH_8U, 3);
     cvResize(image2, image2_interp, CV_INTER_CUBIC);  	
+    std::cout<<"ASHWIN"<<image1->height<<" "<<image1->width<<"\n";
+    std::cout<<"ASHWIN"<<image1_interp->height<<" "<<image1_interp->width<<"\n";
 	//cvNamedWindow("main", CV_WINDOW_AUTOSIZE); 
     Pair1.start_calculation_nointerp(image2_interp, image1_interp, 24);
     //MVs stored in Pair1.Computed_Data.v_x1, Pair1.Computed_Data.v_y1  

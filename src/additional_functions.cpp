@@ -1,5 +1,7 @@
 void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 {
+	int local_h;
+	int local_w;
 	// SAD minimization
 	//     Find a set of motion vectors with min SAD score.
 	//     Calculate_SAD could be used here
@@ -54,6 +56,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 	b_size = level4_block_size;
 	while (b_size > 1) //= (level2_block_size >> 1))
 	{      
+  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
         add_smoothness8_overlap((k+l+1)*(b_size << 1));  
@@ -107,6 +110,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
     b_size = level3_block_size;
 	while (b_size > 1) //= (level1_block_size >> 1))
 	{
+  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
         add_smoothness8_overlap((k+l+1)*(b_size << 1));   
@@ -159,6 +163,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
     b_size = level2_block_size;
 	while (b_size > 1) //= (level1_block_size >> 1))
 	{
+  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
         add_smoothness8_overlap((k+l+1)*(b_size << 1));   
@@ -210,6 +215,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 	b_size = level1_block_size;
 	while(b_size > 1)
 	{
+  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
  	  {
         add_smoothness8_overlap((k+l+1)*(b_size << 1));
@@ -230,14 +236,29 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 
 
       
-  for(int i = 0 ; i< height1; i++)
+//  for(int i = 0 ; i< height1; i++)
+//  {
+//          for(int j= 0; j <width1 ; j++)
+//          {
+//        	  fout<<v_x[i*step1+j]<<","<<v_y[i*step1+j]<<"\n";
+//        	  
+//          }
+//  } 
+  local_w = 0 ;
+  local_h = 0;
+  	std::cout<<start_pos_level1<<" "<<add_width1<<" "<<add_height1<<" "<<start_pos_level1<<"\n";
+  for (int i = start_pos_level1 ; i < height1-(add_height1 - start_pos_level1 ); i+=4) //goes through all vertical pixels
   {
-	  for(int j= 0; j <width1 ; j++)
-	  {
-		  fout<<v_x[i*step1+j]<<","<<v_y[i*step1+j]<<"\n";
-		  
-	  }
-  } 
+	  local_h++;
+	for (int j = start_pos_level1 ; j < width1-(add_width1 - start_pos_level1 ); j+=4) //goes through all horizontal pixels
+    {	   
+	    fout<<Computed_Data.v_x1[i*step1+j]<<","<<Computed_Data.v_y1[i*step1+j]<<"\n";	
+	  local_w++;
+				
+    }
+	
+  }
+  	std::cout<<local_h<<" "<<local_w<<"\n";
 }
 
 

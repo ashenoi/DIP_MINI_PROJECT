@@ -190,6 +190,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   add_width =  (level4a_grey->width - (int)floor(double(level4a_grey->width)/level4_block_size)*level4_block_size) % level4_block_size + ((start_pos_level4 << 1));
   add_height4 = add_height;
   add_width4 = add_width;
+    std::cout<<"ASHWIN add"<<add_height<<" "<<add_width<<"\n";
   pad_images(level4a_grey, level4b_grey, level4a_pad, level4b_pad, start_pos_level4);
   data_level4a = (uchar *)level4a_pad->imageData;
   data_level4b = (uchar *)level4b_pad->imageData;	
@@ -271,10 +272,10 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   predict_step = frame_predict->widthStep; 
   
   // This is where we allocate our dynamic arrays used to calculate motion positions and motion vectors
-//  std::cout<<"ASHWIN VX "<<height1*step1<<"\n";
-//  std::cout<<"ASHWIN VX "<<height2*step2<<"\n";
-//  std::cout<<"ASHWIN VX "<<height3*step3<<"\n";
-//  std::cout<<"ASHWIN VX "<<height4*step4<<"\n";
+  std::cout<<"ASHWIN VX "<<height1<<" "<<step1<<"\n";
+  std::cout<<"ASHWIN VX "<<height2<<" "<<step2<<"\n";
+  std::cout<<"ASHWIN VX "<<height3<<" "<<step3<<"\n";
+  std::cout<<"ASHWIN VX "<<height4<<" "<<step4<<"\n";
   Computed_Data.v_x1 = new int[height1*step1];
   Computed_Data.v_y1 = new int[height1*step1];	
   Computed_Data.overlap= new int[height1*step1];	
@@ -345,9 +346,25 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
 	  overlap4[i*step4+j] = 0;		
     }
   }
+    std::cout<<"ASHWIN"<<level4a_grey->height<<" "<<level4a_grey->width<<"\n";
+    std::cout<<"ASHWIN"<<level3a_grey->height<<" "<<level3a_grey->width<<"\n";
+    std::cout<<"ASHWIN"<<level2a_grey->height<<" "<<level2a_grey->width<<"\n";
+    std::cout<<"ASHWIN"<<level1a_grey->height<<" "<<level1a_grey->width<<"\n";
+    std::cout<<"ASHWIN"<<height1<<" "<<width1<<" "<<step1<<"\n";
+    std::cout<<"ASHWIN"<<height2<<" "<<width2<<" "<<step2<<"\n";
+    std::cout<<"ASHWIN"<<height3<<" "<<width3<<" "<<step3<<"\n";
+    std::cout<<"ASHWIN"<<height4<<" "<<width4<<" "<<step4<<"\n";
 
   calculate_motion_vectors_overlap(lambda_value);
-//  calculate_motion_vectors_lagrange(lambda_value);
+  //calculate_motion_vectors_lagrange(lambda_value);
+  //for(int i = 0 ; i< height1; i++)
+  //{
+  //        for(int j= 0; j <width1 ; j++)
+  //        {
+  //      	  fout<<v_x[i*step1+j]<<","<<v_y[i*step1+j]<<"\n";
+  //      	  
+  //        }
+  //} 
 
 }
 void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplImage*& image2, int lambda_value)
