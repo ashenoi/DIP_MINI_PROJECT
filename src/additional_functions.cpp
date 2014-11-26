@@ -21,7 +21,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 	// 	Repeat the whole process again till we reach the highest level
 	
   //Applies to all levels
-  boundary_min = 100;//8;
+  boundary_min = 8;//8;
   //This file is used for debugging
   fout.open("motion_vectors.txt");
   //total_count = 0;
@@ -58,10 +58,10 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 	b_size = level4_block_size;
 	while (b_size > 1) //= (level2_block_size >> 1))
 	{      
-  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
-        add_smoothness8_overlap((k+l+1)*(b_size << 1));  
+  		calculate_block_overlap();
+        	add_smoothness8_overlap((k+l+1)*(b_size << 1));  
 	  }
 	  setMVs_iter();
 	  b_size = (b_size >> 1);
@@ -112,10 +112,10 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
     b_size = level3_block_size;
 	while (b_size > 1) //= (level1_block_size >> 1))
 	{
-  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
-        add_smoothness8_overlap((k+l+1)*(b_size << 1));   
+  		calculate_block_overlap();
+        	add_smoothness8_overlap((k+l+1)*(b_size << 1));   
 	  }
       setMVs_iter();
 	  b_size = (b_size >> 1);
@@ -165,10 +165,10 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
     b_size = level2_block_size;
 	while (b_size > 1) //= (level1_block_size >> 1))
 	{
-  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
 	  {
-        add_smoothness8_overlap((k+l+1)*(b_size << 1));   
+  		calculate_block_overlap();
+        	add_smoothness8_overlap((k+l+1)*(b_size << 1));   
 	  }
       setMVs_iter();
 	  b_size = (b_size >> 1);
@@ -217,10 +217,10 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 	b_size = level1_block_size;
 	while(b_size > 1)
 	{
-  calculate_block_overlap();
 	  for(int l = 0; l < 2; l++)
  	  {
-        add_smoothness8_overlap((k+l+1)*(b_size << 1));
+  		calculate_block_overlap();
+        	add_smoothness8_overlap((k+l+1)*(b_size << 1));   
 	  }
       setMVs_iter();
       b_size = (b_size >> 1);
@@ -266,7 +266,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 
 	    //fout<<Computed_Data.v_x1[i*step1+j]<<","<<Computed_Data.v_y1[i*step1+j]<<"\n";	
 
-	  local_w++; x_avg = x_sum/16; y_avg = y_sum/16;
+	  local_w++; x_avg = x_sum/(16*4); y_avg = y_sum/(16*4);
 		fout<<x_avg<<","<<y_avg<<"\n";			
     }
 	

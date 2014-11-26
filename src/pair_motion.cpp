@@ -357,14 +357,28 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
 
   calculate_motion_vectors_overlap(lambda_value);
   //calculate_motion_vectors_lagrange(lambda_value);
-  //for(int i = 0 ; i< height1; i++)
+  //      double x_avg, y_avg;
+  //      double x_sum, y_sum;
+  //for (int i = start_pos_level1 ; i < height1-(add_height1 - start_pos_level1 ); i+=4) //goes through all vertical pixels
   //{
-  //        for(int j= 0; j <width1 ; j++)
-  //        {
-  //      	  fout<<v_x[i*step1+j]<<","<<v_y[i*step1+j]<<"\n";
-  //      	  
-  //        }
-  //} 
+  //      for (int j = start_pos_level1 ; j < width1-(add_width1 - start_pos_level1 ); j+=4) //goes through all horizontal pixels
+  //  {
+  //  	x_sum = 0; y_sum = 0;
+  //          for (int k = i; k < std::min(i+4,height1-(add_height1 - start_pos_level1)); k++)
+  //          {
+  //          	for (int l = j; l < std::min(j+4,width1-(add_width1 - start_pos_level1)); l++)
+  //          	{
+  //          		x_sum += Computed_Data.v_x1[k*step1+l];
+  //          		y_sum += Computed_Data.v_y1[k*step1+l];
+  //          	}
+  //          }
+
+  //          //fout<<Computed_Data.v_x1[i*step1+j]<<","<<Computed_Data.v_y1[i*step1+j]<<"\n";	
+  //        x_avg = x_sum/(16*4); y_avg = y_sum/(16*4);
+  //      	fout<<x_avg<<","<<y_avg<<"\n";			
+  //  }
+  //      
+  //}
 
 }
 void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplImage*& image2, int lambda_value)
