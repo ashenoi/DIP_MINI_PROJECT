@@ -190,7 +190,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   add_width =  (level4a_grey->width - (int)floor(double(level4a_grey->width)/level4_block_size)*level4_block_size) % level4_block_size + ((start_pos_level4 << 1));
   add_height4 = add_height;
   add_width4 = add_width;
-    std::cout<<"ASHWIN add"<<add_height<<" "<<add_width<<"\n";
+//    std::cout<<"ASHWIN add"<<add_height<<" "<<add_width<<"\n";
   pad_images(level4a_grey, level4b_grey, level4a_pad, level4b_pad, start_pos_level4);
   data_level4a = (uchar *)level4a_pad->imageData;
   data_level4b = (uchar *)level4b_pad->imageData;	
@@ -272,10 +272,10 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   predict_step = frame_predict->widthStep; 
   
   // This is where we allocate our dynamic arrays used to calculate motion positions and motion vectors
-  std::cout<<"ASHWIN VX "<<height1<<" "<<step1<<"\n";
-  std::cout<<"ASHWIN VX "<<height2<<" "<<step2<<"\n";
-  std::cout<<"ASHWIN VX "<<height3<<" "<<step3<<"\n";
-  std::cout<<"ASHWIN VX "<<height4<<" "<<step4<<"\n";
+//  std::cout<<"ASHWIN VX "<<height1<<" "<<step1<<"\n";
+//  std::cout<<"ASHWIN VX "<<height2<<" "<<step2<<"\n";
+//  std::cout<<"ASHWIN VX "<<height3<<" "<<step3<<"\n";
+//  std::cout<<"ASHWIN VX "<<height4<<" "<<step4<<"\n";
   Computed_Data.v_x1 = new int[height1*step1];
   Computed_Data.v_y1 = new int[height1*step1];	
   Computed_Data.overlap= new int[height1*step1];	
@@ -346,40 +346,44 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
 	  overlap4[i*step4+j] = 0;		
     }
   }
-    std::cout<<"ASHWIN"<<level4a_grey->height<<" "<<level4a_grey->width<<"\n";
-    std::cout<<"ASHWIN"<<level3a_grey->height<<" "<<level3a_grey->width<<"\n";
-    std::cout<<"ASHWIN"<<level2a_grey->height<<" "<<level2a_grey->width<<"\n";
-    std::cout<<"ASHWIN"<<level1a_grey->height<<" "<<level1a_grey->width<<"\n";
-    std::cout<<"ASHWIN"<<height1<<" "<<width1<<" "<<step1<<"\n";
-    std::cout<<"ASHWIN"<<height2<<" "<<width2<<" "<<step2<<"\n";
-    std::cout<<"ASHWIN"<<height3<<" "<<width3<<" "<<step3<<"\n";
-    std::cout<<"ASHWIN"<<height4<<" "<<width4<<" "<<step4<<"\n";
-
+//    std::cout<<"ASHWIN"<<level4a_grey->height<<" "<<level4a_grey->width<<"\n";
+//    std::cout<<"ASHWIN"<<level3a_grey->height<<" "<<level3a_grey->width<<"\n";
+//    std::cout<<"ASHWIN"<<level2a_grey->height<<" "<<level2a_grey->width<<"\n";
+//    std::cout<<"ASHWIN"<<level1a_grey->height<<" "<<level1a_grey->width<<"\n";
+//    std::cout<<"ASHWIN"<<height1<<" "<<width1<<" "<<step1<<"\n";
+//    std::cout<<"ASHWIN"<<height2<<" "<<width2<<" "<<step2<<"\n";
+//    std::cout<<"ASHWIN"<<height3<<" "<<width3<<" "<<step3<<"\n";
+//    std::cout<<"ASHWIN"<<height4<<" "<<width4<<" "<<step4<<"\n";
+#ifdef OVERLAP
+  std::cout<<"Running overlap function\n";
   calculate_motion_vectors_overlap(lambda_value);
-  //calculate_motion_vectors_lagrange(lambda_value);
-  //      double x_avg, y_avg;
-  //      double x_sum, y_sum;
-  //for (int i = start_pos_level1 ; i < height1-(add_height1 - start_pos_level1 ); i+=4) //goes through all vertical pixels
-  //{
-  //      for (int j = start_pos_level1 ; j < width1-(add_width1 - start_pos_level1 ); j+=4) //goes through all horizontal pixels
-  //  {
-  //  	x_sum = 0; y_sum = 0;
-  //          for (int k = i; k < std::min(i+4,height1-(add_height1 - start_pos_level1)); k++)
-  //          {
-  //          	for (int l = j; l < std::min(j+4,width1-(add_width1 - start_pos_level1)); l++)
-  //          	{
-  //          		x_sum += Computed_Data.v_x1[k*step1+l];
-  //          		y_sum += Computed_Data.v_y1[k*step1+l];
-  //          	}
-  //          }
+#endif
+#ifdef LAG
+  std::cout<<"Running lagrange function\n";
+  calculate_motion_vectors_lagrange(lambda_value);
+        double x_avg, y_avg;
+        double x_sum, y_sum;
+  for (int i = start_pos_level1 ; i < height1-(add_height1 - start_pos_level1 ); i+=4) //goes through all vertical pixels
+  {
+        for (int j = start_pos_level1 ; j < width1-(add_width1 - start_pos_level1 ); j+=4) //goes through all horizontal pixels
+    {
+    	x_sum = 0; y_sum = 0;
+            for (int k = i; k < std::min(i+4,height1-(add_height1 - start_pos_level1)); k++)
+            {
+            	for (int l = j; l < std::min(j+4,width1-(add_width1 - start_pos_level1)); l++)
+            	{
+            		x_sum += Computed_Data.v_x1[k*step1+l];
+            		y_sum += Computed_Data.v_y1[k*step1+l];
+            	}
+            }
 
-  //          //fout<<Computed_Data.v_x1[i*step1+j]<<","<<Computed_Data.v_y1[i*step1+j]<<"\n";	
-  //        x_avg = x_sum/(16*4); y_avg = y_sum/(16*4);
-  //      	fout<<x_avg<<","<<y_avg<<"\n";			
-  //  }
-  //      
-  //}
-
+            //fout<<Computed_Data.v_x1[i*step1+j]<<","<<Computed_Data.v_y1[i*step1+j]<<"\n";	
+          x_avg = x_sum/(16*4); y_avg = y_sum/(16*4);
+        	fout<<x_avg<<","<<y_avg<<"\n";			
+    }
+        
+  }
+#endif
 }
 void Pair_Motion::start_calculation_nointerp_nonsquare(IplImage*& image1, IplImage*& image2, int lambda_value)
 {
@@ -594,7 +598,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   fout.open("motion_vectors.txt");
   //total_count = 0;
 
-////  std::cout<<"ASHWIN1\n";
+//////  std::cout<<"ASHWIN1\n";
   //--------------------Level 3----------------------------
   //Initializations for Level 3
   level = 3;
@@ -616,7 +620,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   //v_y_old = v_y3_old;
   //End of initializations
   onelevlspiral_BM();
-////  std::cout<<"ASHWIN2\n";
+//////  std::cout<<"ASHWIN2\n";
   //onelevl_BM();
   for(int k = 0; k < 2; k++)
   {
@@ -633,7 +637,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   } 
   b_size = (level2_block_size >> 1); // set to half of block size needed at next level
   
-////  std::cout<<"ASHWIN3\n";
+//////  std::cout<<"ASHWIN3\n";
   //-----------------End of Level 3------------------------
 
   //---------------------Level 2---------------------------
@@ -3590,7 +3594,7 @@ void Pair_Motion::nextlevlspiral_BM_sorted_v2()
 }
 void Pair_Motion::setMVs_iter()
 {
-////  std::cout<<"ASHWINSETMVENTRE3\n";
+//////  std::cout<<"ASHWINSETMVENTRE3\n";
   int b_size_div = (b_size >> 1);
   //int median_x, median_y; //average of surrounding MVs
   
@@ -3687,8 +3691,8 @@ void Pair_Motion::setMVs_iter()
 	v_y[i*step_size+(j+block_size_div)] = v_y[i*step_size+j]; //take care of bottom left 1/4 block
 	v_y[(i+block_size_div)*step_size+(j+block_size_div)] = v_y[i*step_size+j]; //take care of bottom right block
   } */
-////  std::cout<<"ASHWINSETMV3\n";
-////  std::cout<<"ASHWIN "<<sizeof(v_x)<<"  "<<sizeof(v_y)<<"\n";
+//////  std::cout<<"ASHWINSETMV3\n";
+//////  std::cout<<"ASHWIN "<<sizeof(v_x)<<"  "<<sizeof(v_y)<<"\n";
 }
 void Pair_Motion::setMVs_iter_nonsquare()
 {
@@ -4907,7 +4911,7 @@ void Pair_Motion::add_smoothness8_old(double lambda_value)
 }
 void Pair_Motion::add_smoothness8(double lambda_value) 
 {
-////  std::cout<<"ASHWINADDSMOOTHV3\n";
+//////  std::cout<<"ASHWINADDSMOOTHV3\n";
   int min_index, i, j, k, l, n, p;
   double lambda;
   double candidate[9];  
@@ -5096,9 +5100,9 @@ void Pair_Motion::add_smoothness8(double lambda_value)
 	      {
 	        for(l = v_x[i*step+j] + j; l < v_x[i*step+j] + j + b_size; l++)
 		{
-////		      std::cout<<"ASHWIN"<<sizeof(Computed_Data.overlap)<<"  "<<k<<" "<<step<<" "<<l<<"\n";
+//////		      std::cout<<"ASHWIN"<<sizeof(Computed_Data.overlap)<<"  "<<k<<" "<<step<<" "<<l<<"\n";
 		      Computed_Data.overlap[k*step+l] -= 1;
-////  	              std::cout<<"ASHWINADDSMOOTHV3CHECK\n";
+//////  	              std::cout<<"ASHWINADDSMOOTHV3CHECK\n";
 		}
 	      }
 	      //Next, add the overlap caused by the minimum found from min_array() above.
@@ -6400,7 +6404,7 @@ void Pair_Motion::add_smoothness8(double lambda_value)
 	}
   }	
   
-////  std::cout<<"ASHWINADDSMOOTHVEXIT3\n";
+//////  std::cout<<"ASHWINADDSMOOTHVEXIT3\n";
 }
 
 void Pair_Motion::add_smoothness8_weighted(double lambda_value) 

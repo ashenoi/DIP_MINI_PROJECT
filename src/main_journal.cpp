@@ -12,7 +12,7 @@ int main(int argc, char** argv )
   //NOTE!!!! THESE SEARCH SIZES CANNOT BE THE SAME SIZE -- THEY NEED TO GO DOWN BY A FACTOR OF TWO AT EACH LEVEL!!!!!
 
   int search_sizes[] = {64, 64, 64, 128}; //searchsizes for middlebury most recent -- interpolation factor of 4 -- 4 levels of hierarchy instead of 3 -- smaller block sizes
-  int block_sizes[] = {32, 32, 32, 32};
+  int block_sizes[] = {32, 64, 64, 64};
   
   int search_sizes_nonsquare_x[] = {16, 32, 64};
   int search_sizes_nonsquare_y[] = {16, 32, 64};
@@ -49,8 +49,8 @@ int main(int argc, char** argv )
     image2 = cvLoadImage(FILENAME_FRAME2, CV_LOAD_IMAGE_UNCHANGED);
     image2_interp = cvCreateImage(cvSize(image2->width*(int)interp_factor, image2->height*(int)interp_factor), IPL_DEPTH_8U, 3);
     cvResize(image2, image2_interp, CV_INTER_CUBIC);  	
-    std::cout<<"ASHWIN"<<image1->height<<" "<<image1->width<<"\n";
-    std::cout<<"ASHWIN"<<image1_interp->height<<" "<<image1_interp->width<<"\n";
+//    std::cout<<"ASHWIN"<<image1->height<<" "<<image1->width<<"\n";
+//    std::cout<<"ASHWIN"<<image1_interp->height<<" "<<image1_interp->width<<"\n";
 	//cvNamedWindow("main", CV_WINDOW_AUTOSIZE); 
     Pair1.start_calculation_nointerp(image2_interp, image1_interp, 24);
     //MVs stored in Pair1.Computed_Data.v_x1, Pair1.Computed_Data.v_y1  

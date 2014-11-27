@@ -2,8 +2,15 @@ export SRC := ../src
 export FILE := main_journal
 export IMAGE ?= Dimetrodon
 
+ifdef LAG
+	OPT = -DLAG
+else
+	OPT = -DOVERLAP
+endif
+
+
 compile: clean
-	g++ -ggdb `pkg-config --cflags opencv` -o out.o ../src/pair_motion.cpp ../src/main_journal.cpp -I../src `pkg-config --libs opencv`
+	g++ -ggdb `pkg-config --cflags opencv` -o out.o ../src/pair_motion.cpp ../src/main_journal.cpp -I../src ${OPT} `pkg-config --libs opencv`
 
 clean:
 	rm -fr motion_vectors.txt out.o
