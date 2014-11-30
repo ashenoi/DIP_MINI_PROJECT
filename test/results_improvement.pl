@@ -6,7 +6,7 @@ while($line1=<FILE1>)
 	$line2=<FILE2>;
 	chomp($line1);
 	chomp($line2);
-	print log10(($line2/$line1)),"\n";
+	print 10*log10(($line2/$line1)),"\n";
 
 }
 sub log10 {
