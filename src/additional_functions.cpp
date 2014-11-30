@@ -50,7 +50,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   //End of initializations
   Computed_Data.overlap = overlap4;
   onelevlspiral_BM();
-  calculate_block_overlap();
+  //calculate_block_overlap();
 //////  std::cout<<"ASHWIN2\n";
   //onelevl_BM();
   for(int k = 0; k < 2; k++)
@@ -104,7 +104,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   Computed_Data.overlap = overlap3;
 
   nextlevlspiral_BM_adapt();
-  calculate_block_overlap();
+  //calculate_block_overlap();
   //nextlevlspiral_BM();
   //nextlevl_BM();  
   for(int k = 0; k < 2; k++)
@@ -157,7 +157,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   start_pos = start_pos_level2;
   Computed_Data.overlap = overlap2;
   nextlevlspiral_BM_adapt();
-  calculate_block_overlap();
+  //calculate_block_overlap();
   //nextlevlspiral_BM();
   //nextlevl_BM();  
   for(int k = 0; k < 2; k++)
@@ -208,7 +208,7 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
   start_pos = start_pos_level1;
   Computed_Data.overlap = overlap1;
   nextlevlspiral_BM_adapt();
-  calculate_block_overlap();
+  //calculate_block_overlap();
   //nextlevlspiral_BM();
   //nextlevl_BM();      
   //reliability_threshold = (b_size << 12); 
@@ -276,42 +276,42 @@ void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 
 void Pair_Motion::calculate_reliability()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_pixel_reliability()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::validity_for_SR()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_pixel_reliability_multiplevectors()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_smoothness_reliability()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_smoothness_reliability2()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_deviation_reliability()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_gradient_reliability()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_block_overlap()
@@ -340,17 +340,17 @@ void Pair_Motion::calculate_block_overlap()
 
 void Pair_Motion::calculate_pixel_overlap()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::calculate_pixel_overlap_multiplevectors(double& mean)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 double Pair_Motion::find_overlap_max()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
@@ -361,47 +361,47 @@ int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
 
 void Pair_Motion::calculate_singleMV_overlap(int b_size, int pos_y, int pos_x, int& top_left, int& top_right, int& bottom_left, int& bottom_right)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::onelevlspiral_BM_minoverlap()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::nextlevlspiral_BM_minoverlap(int start_direction)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::nextlevlspiral_BM_weightedoverlap(int start_direction)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::nextlevlspiral_minoverlap2()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 void Pair_Motion::minimize_overlap()
 {
-;
+std::cout<<"Inside Not implemented";
 }
  
 void Pair_Motion::minimize_overlap2()
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 double Pair_Motion::calc_derivX(int k, int l)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 double Pair_Motion::calc_derivY(int k, int l)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 
 double Pair_Motion::cost_fn_top_overlap(int v_yval, int v_xval, int orig_y, int orig_x)
@@ -662,7 +662,7 @@ double Pair_Motion::cost_fn_bottomrightcorn_overlap(int v_yval, int v_xval, int 
 
 double Pair_Motion::angle_similarity(int y, int x, int i, int j)
 {
-;
+std::cout<<"Inside Not implemented";
 }
 void Pair_Motion::add_smoothness8_overlap(double lambda_value) 
 {

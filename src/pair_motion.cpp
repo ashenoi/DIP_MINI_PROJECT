@@ -593,7 +593,7 @@ double Pair_Motion::calculate_autocorr(IplImage *& image1, int b_size)
 void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
 { 
   //Applies to all levels
-  boundary_min = 100;//8;
+  boundary_min = 8;//8;
   //This file is used for debugging
   fout.open("motion_vectors.txt");
   //total_count = 0;
@@ -601,22 +601,22 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
 //////  std::cout<<"ASHWIN1\n";
   //--------------------Level 3----------------------------
   //Initializations for Level 3
-  level = 3;
-  width = width3;
-  height = height3;
-  add_height = add_height3;
-  add_width = add_width3;
-  step = step3;   
-  search_size = level3_search_size;
-  b_size = level3_block_size;
-  start_pos = start_pos_level3;
-  v_shift = v_shift3;
-  v_shift_previous = v_shift3;
-  data_a = data_level3a;
-  data_b = data_level3b;
-  v_x = v_x3; 
+  level = 4;
+  width = width4;
+  height = height4;
+  add_height = add_height4;
+  add_width = add_width4;
+  step = step4;   
+  search_size = level4_search_size;
+  b_size = level4_block_size;
+  start_pos = start_pos_level4;
+  v_shift = v_shift4;
+  v_shift_previous = v_shift4;
+  data_a = data_level4a;
+  data_b = data_level4b;
+  v_x = v_x4; 
   //v_x_old = v_x3_old;
-  v_y = v_y3;
+  v_y = v_y4;
   //v_y_old = v_y3_old;
   //End of initializations
   onelevlspiral_BM();
@@ -624,21 +624,71 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
   //onelevl_BM();
   for(int k = 0; k < 2; k++)
   {
-	b_size = level3_block_size;
+	b_size = level4_block_size;
 	while (b_size > 1) //= (level2_block_size >> 1))
 	{      
 	  for(int l = 0; l < 2; l++)
 	  {
-        add_smoothness8((k+l+1)*(b_size << 1));  
+        add_smoothness8_old((k+l+1)*(b_size << 1));  
 	  }
 	  setMVs_iter();
 	  b_size = (b_size >> 1);
 	}	
   } 
-  b_size = (level2_block_size >> 1); // set to half of block size needed at next level
+  b_size = (level3_block_size >> 1); // set to half of block size needed at next level
   
 //////  std::cout<<"ASHWIN3\n";
-  //-----------------End of Level 3------------------------
+  //-----------------End of Level 4------------------------
+
+
+  //---------------------Level 3---------------------------
+  //Initializations for Level 3
+  level = 3;
+  width_previous = width4;
+  width = width3;
+  height_previous = height4;
+  height = height3;
+  add_height = add_height3;
+  add_width = add_width3;
+  step = step3;
+  step_previous = step4;
+  search_size = level3_search_size;
+  b_size_previous = b_size; 
+  b_size = level3_block_size;
+  //start_pos no change at first
+  v_shift = v_shift3;
+  v_shift_previous = v_shift4;
+  data_a = data_level3a;
+  data_b = data_level3b;
+  v_xprev = v_x4;
+  v_yprev = v_y4;
+  v_x = v_x3;
+  //v_x_old = v_x2_old;
+  v_y = v_y3;
+  //v_y_old = v_y2_old;
+  //End of initializations
+  start_pos_prev = start_pos_level4;
+  start_pos = start_pos_level3;
+  nextlevlspiral_BM_adapt();
+  //nextlevlspiral_BM();
+  //nextlevl_BM();  
+  for(int k = 0; k < 2; k++)
+  {
+    b_size = level3_block_size;
+	while (b_size > 1) //= (level1_block_size >> 1))
+	{
+	  for(int l = 0; l < 2; l++)
+	  {
+        add_smoothness8_old((k+l+1)*(b_size << 1));   
+	  }
+      setMVs_iter();
+	  b_size = (b_size >> 1);
+	}
+  }  
+  b_size = (level2_block_size >> 1); //set to half of the block size needed at next level
+    
+  //-----------------End of Level 3------------------------  
+
 
   //---------------------Level 2---------------------------
   //Initializations for Level 2
@@ -678,7 +728,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
 	{
 	  for(int l = 0; l < 2; l++)
 	  {
-        add_smoothness8((k+l+1)*(b_size << 1));   
+        add_smoothness8_old((k+l+1)*(b_size << 1));   
 	  }
       setMVs_iter();
 	  b_size = (b_size >> 1);
@@ -727,7 +777,7 @@ void Pair_Motion::calculate_motion_vectors_lagrange(int lambda_value)
 	{
 	  for(int l = 0; l < 2; l++)
  	  {
-        add_smoothness8((k+l+1)*(b_size << 1));
+        add_smoothness8_old((k+l+1)*(b_size << 1));
 	  }
       setMVs_iter();
       b_size = (b_size >> 1);
