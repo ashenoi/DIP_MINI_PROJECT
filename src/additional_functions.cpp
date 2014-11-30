@@ -355,8 +355,18 @@ std::cout<<"Inside Not implemented";
 
 int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
 {
-//// //std::cout<<"ASHWIN overlap "<<Computed_Data.overlap[y_pos*step+x_pos]<<"\n";
- return Computed_Data.overlap[y_pos*step+x_pos]; 
+	int Lx = 0;
+
+  	for(int k = x_pos; k < x_pos + b_size; k++)
+  	{
+		for(int l = y_pos; l < y_pos + b_size; l++)
+		{
+			Lx += Computed_Data.overlap[k*step+l];
+		}
+  	}
+	
+	//std::cout<<"GURU overlap "<<((b_size*b_size)+Lx)<<"\n";
+ 	return (Lx); 
 }
 
 void Pair_Motion::calculate_singleMV_overlap(int b_size, int pos_y, int pos_x, int& top_left, int& top_right, int& bottom_left, int& bottom_right)
