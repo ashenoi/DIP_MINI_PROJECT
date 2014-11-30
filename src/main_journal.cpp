@@ -12,7 +12,7 @@ int main(int argc, char** argv )
   //NOTE!!!! THESE SEARCH SIZES CANNOT BE THE SAME SIZE -- THEY NEED TO GO DOWN BY A FACTOR OF TWO AT EACH LEVEL!!!!!
 
   int search_sizes[] = {64, 64, 64, 128}; //searchsizes for middlebury most recent -- interpolation factor of 4 -- 4 levels of hierarchy instead of 3 -- smaller block sizes
-  int block_sizes[] = {32, 64, 64, 64};
+  int block_sizes[] = {32, 32, 32, 32};
   
   int search_sizes_nonsquare_x[] = {16, 32, 64};
   int search_sizes_nonsquare_y[] = {16, 32, 64};

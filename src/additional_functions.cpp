@@ -357,15 +357,15 @@ int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
 {
 	int Lx = 0;
 
-  	for(int k = x_pos; k < x_pos + b_size; k++)
+  	for(int k = y_pos; k < y_pos + b_size; k++)
   	{
-		for(int l = y_pos; l < y_pos + b_size; l++)
+		for(int l = x_pos; l < x_pos + b_size; l++)
 		{
 			Lx += Computed_Data.overlap[k*step+l];
 		}
   	}
 	
-	//std::cout<<"GURU overlap "<<((b_size*b_size)+Lx)<<"\n";
+	//std::cout<<"GURU overlap for b_size = "<<b_size<<" Lx = "<<Lx<<"\n";
  	return (Lx); 
 }
 
