@@ -1,6 +1,7 @@
 open(FILE1,"<$ARGV[0]") or die("Could not open");
 open(FILE2,"<$ARGV[1]") or die("Could not open");
 
+print "The improvement in the results are\n"
 while($line1=<FILE1>)
 {
 	$line2=<FILE2>;
