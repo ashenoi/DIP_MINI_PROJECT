@@ -1,3 +1,4 @@
+// The below function implements the hierarchial algorithm from the paper
 void Pair_Motion::calculate_motion_vectors_overlap(int lambda_value)
 {
 	int local_h;
@@ -313,7 +314,7 @@ void Pair_Motion::calculate_gradient_reliability()
 {
 std::cout<<"Inside Not implemented";
 }
-
+// This implements the Algortim 1 of the paper
 void Pair_Motion::calculate_block_overlap()
 {
   	for (int i = 0; i < height; i+=1)  //goes through all vertical pixels
@@ -352,7 +353,7 @@ double Pair_Motion::find_overlap_max()
 {
 std::cout<<"Inside Not implemented";
 }
-
+// Get overlap volume is called by the additional smooth function in order to check the overlap volumes
 int Pair_Motion::get_overlap_volume(int x_pos, int y_pos)
 {
 	int Lx = 0;
@@ -414,6 +415,8 @@ double Pair_Motion::calc_derivY(int k, int l)
 std::cout<<"Inside Not implemented";
 }
 
+
+// Below are the various cost functions which are meant for corner cases. The base of this code is from cost_fn
 double Pair_Motion::cost_fn_top_overlap(int v_yval, int v_xval, int orig_y, int orig_x)
 {
   // posx, pos y are for the neighboring block we will try
@@ -674,6 +677,8 @@ double Pair_Motion::angle_similarity(int y, int x, int i, int j)
 {
 std::cout<<"Inside Not implemented";
 }
+// This the fuction which basically implemets the eq 19 from the paper.
+// This minimizes the Energy fucntion defined in 19.
 void Pair_Motion::add_smoothness8_overlap(double lambda_value) 
 {
   int min_index, i, j, k, l, n;

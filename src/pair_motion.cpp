@@ -281,7 +281,7 @@ void Pair_Motion::start_calculation_nointerp(IplImage*& image1, IplImage*& image
   Computed_Data.overlap= new int[height1*step1];	
   //v_x1sub = new double[height1*step1];
   //v_y1sub = new double[height1*step1];
-  //mult_vec1 = new MV_array[height1*step1];
+  mult_vec = new MV_array[height1*step1];
   Computed_Data.reliability = new double[height1*step1];
   //reliability2 = new double[height2*step2];
   //reliability3 = new double[height3*step3];
@@ -1314,7 +1314,7 @@ void Pair_Motion::onelevlspiral_BM_arrayed()
 {  
   int SAD_value, min_SAD_value;
   int i,j,m,l,k,t;
-  int max_count = 3;
+  int max_count = 20;
 
   //These first two loops are for each pixel in the image.  For the meantime, we start at search_size/2 and ignore edges
   for (i = start_pos; i < height-(add_height - start_pos + b_size); i+=b_size)  //goes through all vertical pixels
@@ -1439,6 +1439,18 @@ void Pair_Motion::onelevlspiral_BM_arrayed()
 		  mult_vec[i*step+j].count++;
 		}		
 	  }	 
+      int local_v_x, local_v_y;
+      local_v_y=0;
+      local_v_x=0;
+
+      for(int count1=0;count1<mult_vec[i*step+j].count;count1++)
+      {
+	      local_v_x+=mult_vec[i*step+j].x[count1];
+	      local_v_y+=mult_vec[i*step+j].y[count1];
+
+      }
+      v_x[i*step+j]=local_v_x/mult_vec[i*step+j].count;
+      v_y[i*step+j]=local_v_y/mult_vec[i*step+j].count;
     }  
   }
 }
@@ -2825,7 +2837,7 @@ void Pair_Motion::nextlevlspiral_BM_adapt()
 void Pair_Motion::nextlevlspiral_BM_arrayed()
 {  
   int SAD_value, min_SAD_value;
-  int max_count = 3;
+  int max_count = 20;
  		
   int i,j,m,l,k,t;
   int new_i, new_j; //these will be i and j scaled by level number
@@ -2958,6 +2970,18 @@ void Pair_Motion::nextlevlspiral_BM_arrayed()
 		  mult_vec[new_i*step+new_j].count++;
 		}
 	  }	   	 
+      int local_v_x, local_v_y;
+      local_v_y=0;
+      local_v_x=0;
+
+      for(int count1=0;count1<mult_vec[new_i*step+new_j].count;count1++)
+      {
+	      local_v_x+=mult_vec[new_i*step+new_j].x[count1];
+	      local_v_y+=mult_vec[new_i*step+new_j].y[count1];
+
+      }
+      v_x[new_i*step+new_j]=local_v_x/mult_vec[new_i*step+new_j].count;
+      v_y[new_i*step+new_j]=local_v_y/mult_vec[new_i*step+new_j].count;
     }  
   }  
 }

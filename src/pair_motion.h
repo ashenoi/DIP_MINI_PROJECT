@@ -12,11 +12,14 @@ class MF_data { //motion vectors and frame data
 
 class MV_array { //this is the class which just has the x and y component of the MV.  This makes it easier for when we store multiple MVs in the BM step.
   public:
-	MV_array();
+	MV_array()
+	{
+		;
+	}
 	int count;
-	int x[30];
-	int y[30];
-	int SAD[30];
+	int x[21];
+	int y[21];
+	int SAD[21];
 	int dup;
 };
 
